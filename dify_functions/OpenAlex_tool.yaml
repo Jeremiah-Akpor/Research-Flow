@@ -1,0 +1,272 @@
+openapi: "3.0.0"
+info:
+  title: OpenAlex API
+  description: "Search OpenAlex for research papers and authors using free-text search. Returns structured JSON."
+  version: "1.0.0"
+servers:
+  - url: https://api.openalex.org
+paths:
+  /works:
+    get:
+      summary: Search for research papers
+      operationId: SearchWorks
+      tags:
+        - Works
+      parameters:
+        - name: search
+          in: query
+          description: 'Search term. Example: "attention is all you need" (searches in title, abstract, and fulltext)'
+          required: true
+          schema:
+            type: string
+            example: "attention is all you need"
+        - name: per-page
+          in: query
+          description: 'Number of results per page (default: 10, max: 200)'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: 'Page number for pagination'
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: JSON response with research paper metadata.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      per_page:
+                        type: integer
+                      page:
+                        type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        doi:
+                          type: string
+                        publication_date:
+                          type: string
+                          format: date
+                        has_fulltext:
+                          type: boolean
+                        authorships:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  display_name:
+                                    type: string
+  /works?filter:
+    get:
+      summary: Search for research papers using a filter query
+      operationId: SearchWorksByFilter
+      tags:
+        - Works
+      parameters:
+        - name: filter
+          in: query
+          description: "Filter parameter for searching works. Example: author.id:A5023448834"
+          required: true
+          schema:
+            type: string
+            example: "author.id:A5023448834"
+        - name: per-page
+          in: query
+          description: "Number of results per page (default: 10, max: 200)."
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: "Page number for pagination."
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: "Successful response with research paper metadata."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      per_page:
+                        type: integer
+                      page:
+                        type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        doi:
+                          type: string
+                        publication_date:
+                          type: string
+                          format: date
+                        authorships:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  display_name:
+                                    type: string
+  /authors:
+    get:
+      summary: Search for authors
+      operationId: SearchAuthors
+      tags:
+        - Authors
+      parameters:
+        - name: search
+          in: query
+          description: 'Author name. Example: "Carl Sagan" (searches in display_name and display_name_alternatives)'
+          required: true
+          schema:
+            type: string
+            example: "Carl Sagan"
+        - name: per-page
+          in: query
+          description: 'Number of results per page (default: 10, max: 200)'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: 'Page number for pagination'
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: JSON response with author metadata.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      per_page:
+                        type: integer
+                      page:
+                        type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        display_name:
+                          type: string
+                        works_count:
+                          type: integer
+                        cited_by_count:
+                          type: integer
+                        affiliations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              display_name:
+                                type: string
+        "400":
+          description: Invalid request parameters.
+        "403":
+          description: Access forbidden or incorrect API usage.
+        "500":
+          description: Internal server error.
+  /authors/{author_id}:
+    get:
+      summary: Get author details by ID
+      operationId: GetAuthorById
+      tags:
+        - Authors
+      parameters:
+        - name: author_id
+          in: path
+          description: "The unique OpenAlex author ID. Example: A5012276327"
+          required: true
+          schema:
+            type: string
+            example: "A5012276327"
+      responses:
+        "200":
+          description: "JSON response with author details."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  display_name:
+                    type: string
+                  works_count:
+                    type: integer
+                  cited_by_count:
+                    type: integer
+                  affiliations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        display_name:
+                          type: string
+        "400":
+          description: "Invalid author ID format."
+        "404":
+          description: "Author not found."
+        "500":
+          description: "Internal server error."
+components:
+  schemas: {}

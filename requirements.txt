@@ -1,0 +1,5 @@
+streamlit
+st_copy_to_clipboard
+streamlit_option_menu
+tiktoken
+pymupdf4llm

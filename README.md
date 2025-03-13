@@ -46,7 +46,7 @@ pip install -r requirements.txt
 - Get the Dify API URL and API Key for the ResearchFlow Dify App
 
 ![ResearchFlow Dify Neo4j Plugin Installation](images/neo4j.png)
-![ResearchFlow Dify OpenAlex Plugin Installation](images\open_alex.png)
+![ResearchFlow Dify OpenAlex Plugin Installation](images/open_alex.png)
 ![ResearchFlow Dify Neo4j Plugin Installation](images/dsl.png)
 
 ### 3. Run the Streamlit App
